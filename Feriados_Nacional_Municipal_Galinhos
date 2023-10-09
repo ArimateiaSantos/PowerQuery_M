@@ -1,0 +1,8 @@
+let
+    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("bZJNbsIwEIWvMmINEqFAYTnYA3GV2NbYQaiIw1RdVOoRuE4u1rFNCkRsLCf+3vy8mfN5Mq8m03JYVMZZbOSqnN0zRmJrPrH/6b8ddNYciYM8X6bnySKrFiMVssXjQKwT8SZHK1JlfEaoRZvuJaYmOGBjbO1C1szfk2b5HDXQKeJsT4YRNIJHcxLtQxUjPgqoyUa6xczM6pnRRmI5iIw7bGrUjgu7Sex67AX7LoCq2YRoSt7lwD32FlJLH+6/uO0rKGcmyKwnzYWtVpDgzQj2KEBp/O4UzMC6EBACyWd6k3/iOx3w3nQ2cvvciLGaPFnd/8oIcv87xmDKuPKkqnkaUYiou6xo+y8WOymk/KqzNfZXIOi4kwF2pfLFoBvbS+MyCdAjkzIaS8osrV5K98bKVMLNnBecZ6cabIdFQmDy/XXXGFWCL7JotKAWY9rOyx8=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [DIA = _t, MES = _t, TIPO = _t, FERIADO = _t]),
+    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"DIA", Int64.Type}, {"MES", Int64.Type}, {"TIPO", type text}, {"FERIADO", type text}}),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"TIPO", "TIPO DE FERIADO"}}),
+    #"Coluna Mesclada Inserida" = Table.AddColumn(#"Colunas Renomeadas", "Mesclado", each Text.Combine({Text.From([DIA], "pt-BR"), Text.From([MES], "pt-BR")}, "/"), type text),
+    #"Colunas Renomeadas1" = Table.RenameColumns(#"Coluna Mesclada Inserida",{{"Mesclado", "DIA/MES"}})
+in
+    #"Colunas Renomeadas1"
